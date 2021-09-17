@@ -1,0 +1,36 @@
+{% extends "artsyml_layout.html" %}
+{% block content %}
+<main role="main" class="container " style="padding-left: 0rem; padding-left: 0rem;">        
+    <div class="row" style="padding-top: 40px; padding-left: 0px; padding-right: 0px;">
+        <div class="col-md-9 " style="margin-left: 0rem;">
+            <!-- <article class="media content-section w-100"> -->
+            <!--    <img class="w-100 " src="{{ url_for('static', filename='snapshot/' + 'styled_frame.jpg') }}"> -->
+            <!-- </article> -->
+
+            {% with messages =get_flashed_messages(with_categories = true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="col-md-3 float-right">
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"> 
+                <div class="btn-group" role="group" aria-label="First group">
+                    <a href="{{ 'artsyml' }}" class="btn btn-primary func_btn" style="margin-left: 0.0rem;">
+                        <i class="fa fa-video-camera" style="font-size: 3rem; padding-top: 1rem;"></i><br_icon></br_icon>Back to Video
+                    </a>          
+                </div> 
+            </div>   
+        </div>
+    </div>
+</main>
+<script>
+    setTimeout(function(){
+        window.location.href = "{{'artsyml'}}";
+    }, 11000);
+</script>
+{% endblock content %}

@@ -1,0 +1,78 @@
+{% extends "artsyml_layout.html" %}
+{% block content %}
+<main role="main" class="container " style="padding-left: 0rem; padding-left: 0rem;">        
+    <div class="row" style="padding-top: 40px; padding-left: 0px; padding-right: 0px;">
+        <div class="col-md-9 " style="margin-left: 0rem;">
+            <!-- <article class="media content-section w-100"> -->
+            <div style="margin-top: 0px;">
+                <img class="w-100" src="{{ url_for('artsyml.video_feed') }}"  height="500"> 
+            </div>
+            <!-- </article> -->
+            {% with messages =get_flashed_messages(with_categories = true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="col-md-3 float-right">
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"> 
+                <div class="btn-group" role="group" aria-label="First group">
+                    <a href="{{ 'snapshot' }}" class="btn btn-primary func_btn" style="margin-left: 0.0rem;">
+                        <i class="fa fa-camera" style="font-size: 3rem; padding-top: 1rem;"></i><br_icon></br_icon>Snapshot
+                    </a>          
+                </div> 
+            </div>   
+
+            <div class="card border-light" style=" width: 14rem; margin-top: 5px; padding: 0px;">
+                <div class="card-header text-center"><b>Style Gallery</b></div>
+                <div class="card-body text-center" style="padding: 0px; margin-bottom: 0px;">
+                    <div class="btn-group-vertical" data-toggle="buttons" style="padding: 0px;"> 
+                        {% for path in relative_style_files_paths %}
+                            {% if loop.index0 is divisibleby(2) %}
+                                <a id=set_style_image name="{{IMAGE_NAME_PREF}}{{loop.index0}}" class="btn btn-primary btn-square-md style_image" style="background-image: url('{{path}}');"></a>
+                            {% endif %}
+                        {% endfor %}
+                    </div> 
+                    <div class="btn-group-vertical" data-toggle="buttons"> 
+                        {% for path in relative_style_files_paths %}
+                            {% if loop.index0 is not divisibleby(2) %}
+                                <a id=set_style_image name="{{IMAGE_NAME_PREF}}{{loop.index0}}" class="btn btn-primary btn-square-md style_image" style="background-image: url('{{path}}');"></a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>          
+                    <hr style="margin: 0px">  
+
+                    <a id=styling_on_off name="{{IMAGE_NAME_PREF}}{{STYLE_ONOFF}}" class="btn btn-primary func_btn_gallary">
+                        <i class="fa fa-power-off" style="font-size: 3rem; padding-top: 1rem;"></i><br_icon></br_icon>Styling
+                    </a>  
+                    <a id=styling_cycle_on_off name="{{IMAGE_NAME_PREF}}{{STYLE_ONOFF}}" class="btn btn-primary func_btn_gallary" style="margin-left: 0rem;">
+                        <i class="fa fa-repeat" style="font-size: 3rem; padding-top: 1rem;"></i><br_icon></br_icon>Cycle Styling
+                    </a>   
+
+                </div>  
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    var time = new Date().getTime();
+    $(document.body).bind("mousemove keypress", function(e) {
+        time = new Date().getTime();
+    });
+
+    function refresh() {
+        if(new Date().getTime() - time >= 6000) 
+            window.location.reload(true);
+        else 
+            setTimeout(refresh, 60000);
+    }
+
+    setTimeout(refresh, 60000);
+</script>
+
+{% endblock content %}

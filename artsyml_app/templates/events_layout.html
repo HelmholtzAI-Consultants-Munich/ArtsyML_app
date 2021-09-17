@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+   <head>
+        <!-- Required meta tags -->
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!--        <img src="img/HelmholtzAI_logo.png" alt="logo" /> -->  
+        <!-- Bootstrap CSS -->      
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/spacelab/bootstrap.min.css" integrity="sha384-F1AY0h4TrtJ8OCUQYOzhcFzUTxSOxuaaJ4BeagvyQL8N9mE4hrXjdDsNx249NpEc" crossorigin="anonymous">
+        <link rel="stylesheet" type = "text/css" href = "{{url_for('static', filename = 'main.css') }}">     
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
+
+        {% if title %}
+            <title>Helmholtz AI Voucher System - {{title}}</title>
+        {% else %}
+            <title>Helmholtz AI Voucher System</title>
+        {% endif %}
+   </head>
+   <body style="background-image: url('../static/img/HMGU_AI_Keyvisual_quer_ohneText_Hflip.jpg'); background-attachment:fixed; background-repeat: no-repeat; background-size: cover; opacity: 0.90;">
+
+        <header class="site-header">
+          <nav class="navbar navbar-expand-md navbar-dark bg-primary  fixed-top ">
+            <a href="{{ url_for('artsyml.artsyml_page') }}" class="btn btn-primary">Have fun with Artsyml!</a>
+            <div class="container">
+              <a class="navbar-brand justify-content-center" style="position: absolute;
+                left: 40%;
+                display: block;
+                width: 300px;
+                text-align: center;
+                background-color: transparent;
+                font-size: 30px;" 
+                href="/"><b>Welcome to Helmholtz AI</b>
+              </a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                </div>
+                <!-- Navbar Right Side -->
+
+              </div>
+            </div>
+            <div class="navbar-nav navbar-right">
+                <span class="navbar-brand "  id="clock"></span>
+
+            </div>
+          </nav>
+        </header>
+    <main role="main" class="container ">        
+          {% block content %}{% endblock %}
+
+    </main>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+   </body>
+</html>
+
+<script type="text/javascript">
+    var clockElement = document.getElementById('clock');
+
+    function clock() {
+        clockElement.textContent = new Date().toString().split("GMT")[0];
+    }
+
+    setInterval(clock, 1000);
+</script>
+<script>
+  var time = new Date().getTime();
+  $(document.body).bind("mousemove keypress", function(e) {
+      time = new Date().getTime();
+  });
+
+  function refresh() {
+      if(new Date().getTime() - time >= 6000) 
+      window.scrollTo(0, 0);
+      else 
+          setTimeout(refresh, 10000);
+  }
+
+  setTimeout(refresh, 10000);
+</script>

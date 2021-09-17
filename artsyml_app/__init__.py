@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+from flask import Flask
+from flask_mail import Mail
+from .config import BuiltinConfig, AdditionalConfig
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
+
+mail = Mail()
+
+def create_app(config_class = BuiltinConfig):
+    app = Flask(__name__)
+    app.config.from_object(config_class)    
+    bcrypt.init_app(app)
+    mail.init_app(app)
+
+
+    from .artsyml_page.routes import artsyml
+    from .events_page.routes import events
+
+    app.register_blueprint(artsyml)
+    app.register_blueprint(events)
+
+    return app
+
