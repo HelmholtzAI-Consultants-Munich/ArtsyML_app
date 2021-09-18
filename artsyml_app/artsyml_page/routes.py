@@ -1,40 +1,40 @@
 from artsyml_app.config import AdditionalConfig
 from artsyml_app.artsyml_page.email_form import EmailForm
 from flask import Blueprint
-from flask import render_template, Response, url_for, flash, redirect
+from flask import render_template, Response, url_for, flash, redirect, current_app
 import os
 import time
-from ..utils import mail2user
+from ..utils import mail2user, abspath_to_relpath
 from .email_form import EmailForm
 from .._artsyml_connector import artsyml_connector
 
 artsyml = Blueprint('artsyml', __name__)
 
 IMAGE_NAME_PREF = "style_image_"
-STYLE_ONOFF = "video_onoff"
+STYLE_ONOFF = "style_onoff"
+CYCLE_ONOFF = "cycle_onoff"
 SNAPSHOT_DIR = os.path.join(os.path.dirname(__file__), '../static/snapshot')
-relative_style_files_paths = [os.path.relpath(_p, os.path.abspath("artsyml_app/templates")) 
-                              for _p in artsyml_connector.artsyml_obj.style_images_path]
+style_files_paths_in_app = {
+    name: os.path.relpath(abspath, os.path.join(os.path.dirname(__file__), '../')) 
+    for (name, abspath) 
+    in artsyml_connector.style_images_abspath.items()
+}
 
 
 
-
-@artsyml.route('/json')
-def json():
-    return render_template('json.html')
 
 
 
 @artsyml.route("/", methods = ['GET', 'POST'])
 @artsyml.route("/artsyml", methods = ['GET', 'POST'])
 def artsyml_page():
+    print("style_files_paths_in_app")
+    print(style_files_paths_in_app)
     artsyml_connector.delete_folder_contects()
-
-    #_video_settings.stop_video()
     return render_template(
         'artsyml.html', 
         title = 'ArtsyML', 
-        relative_style_files_paths = relative_style_files_paths,
+        style_files_paths = style_files_paths_in_app,
         IMAGE_NAME_PREF = IMAGE_NAME_PREF,
         STYLE_ONOFF = STYLE_ONOFF
     )
@@ -45,45 +45,62 @@ def video_feed():
 
 @artsyml.route('/styling_on_off',methods=['GET', 'POST'])
 def style_on_off():
-    artsyml_connector.if_styling_cycle = False
+    #artsyml_connector.if_styling_cycle = False
 
     if artsyml_connector.if_styling:
         artsyml_connector.stop_style()
         print("artsyml_connector.if_styling -> False")
-        return render_template('artsyml.html', title = 'ArtsyML')
     else:
         artsyml_connector.start_style()
         print("artsyml_connector.if_styling -> True")
-        return render_template('artsyml.html', title = 'ArtsyML')
+    
+    return render_template(
+        'artsyml.html', 
+        title = 'ArtsyML', 
+        style_files_paths = style_files_paths_in_app,
+        IMAGE_NAME_PREF = IMAGE_NAME_PREF,
+        STYLE_ONOFF = STYLE_ONOFF
+    )
+
 
 @artsyml.route('/styling_cycle_on_off',methods=['GET', 'POST'])
 def styling_cycle_on_off():
     if artsyml_connector.if_styling_cycle:
-        artsyml_connector.if_styling_cycle = False
-        return render_template('artsyml.html', title = 'ArtsyML')
+        artsyml_connector.stop_cycle()
     else:
-        artsyml_connector.if_styling = True    
-        artsyml_connector.if_styling_cycle = True
-        return render_template('artsyml.html', title = 'ArtsyML')
+         artsyml_connector.start_cycle()
+        
+    return render_template(
+        'artsyml.html', 
+        title = 'ArtsyML', 
+        style_files_paths = style_files_paths_in_app,
+        IMAGE_NAME_PREF = IMAGE_NAME_PREF,
+        STYLE_ONOFF = STYLE_ONOFF
+    )
+
 
 @artsyml.route('/set_style_image/<style_image>',methods=['GET', 'POST'])
 def set_style_image(style_image = None):
-    artsyml_connector.if_styling_cycle = False
+    artsyml_connector.stop_cycle()
     print("received command", style_image)
     style_image_commad = style_image.replace(IMAGE_NAME_PREF, "")
     if style_image_commad == STYLE_ONOFF:
         if artsyml_connector.if_styling:
             print("Styling: Turn off")
-            artsyml_connector.if_styling = False
+            artsyml_connector.stop_style()
         else:
             print("Styling: Turn on")
-            artsyml_connector.if_styling = True
+            artsyml_connector.start_style()
     else:
-        artsyml_connector.if_styling = True
-        style_image_num = int(style_image_commad)
-        print(f"changing styling number to {style_image_num}")
-        artsyml_connector.start_style(style_image_num)
-    return render_template('artsyml.html', title = 'ArtsyML', style_image = None)
+        artsyml_connector.start_style(style_image_commad)
+        print(f"changing styling number to {style_image_commad}")
+    return render_template(
+        'artsyml.html', 
+        title = 'ArtsyML', 
+        style_files_paths = style_files_paths_in_app,
+        IMAGE_NAME_PREF = IMAGE_NAME_PREF,
+        STYLE_ONOFF = STYLE_ONOFF
+    )
 
 @artsyml.route('/snapshot', methods = ['GET', 'POST'])
 def snapshot():

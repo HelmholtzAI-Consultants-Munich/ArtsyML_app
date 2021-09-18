@@ -1,5 +1,4 @@
 import os
-from artsyml import settings
 from artsyml import ArtsyML
 from .config import AdditionalConfig
 import cv2
@@ -13,25 +12,63 @@ SNAPSHOT_FILE_STYLED = "styled_frame.jpg"
 
 class ArtsymlConnector():
 
-    def __init__(self, artsyml_obj, styling_cycle_seconds):
-        self.artsyml_obj = artsyml_obj
-        self.if_camera_on = False        
-        self.if_styling = False
-        self.style_image = 0
-        self.style_image_index = 0
-        self.if_snaphot = False
-        self.if_styling_cycle = False
-        self.styling_cycle_seconds = styling_cycle_seconds
+    def __init__(self):
+        self.__artsyml_objs = {}
+        self.__style_images_abspath = {}
+        self.__if_camera_on = False        
+        self.__if_styling = False
+        self.__if_snaphot = False
+        self.__if_styling_cycle = False
+        self.__active_artsyml_obj_name = None
+        self.styling_cycle_seconds = 3
+
+    @property
+    def style_images_abspath(self):
+        return self.__style_images_abspath
+
+    @property
+    def if_camera_on(self):
+        return self.__if_camera_on
+
+    @property
+    def if_styling(self):
+        return self.__if_styling
+
+    @property
+    def if_snaphot(self):
+        return self.__if_snaphot
+
+    @property
+    def if_styling_cycle(self):
+        return self.__if_styling_cycle 
+
+    def add_style(self, image_file, name):
+        self.__artsyml_objs[name] = ArtsyML(image_file)
+
+        self.__style_images_abspath = {
+            name: atrsyml_obj.style_image_abspath 
+            for (name, atrsyml_obj) 
+            in self.__artsyml_objs.items() 
+        }
+
+
+    def add_styles_from_app_config(self):
+        for (name, file) in AdditionalConfig.style_images.items():
+            self.add_style(file, name)
+
+    def change_style_by_name(self, name):
+        self.__active_artsyml_obj = self.__artsyml_objs[name]
+        self.__active_artsyml_obj_name = name
 
     def __str__(self):
-        return f"""ArtsymlConnector params\n+
-               if_camera_on: {self.if_camera_on}\n+
-               if_styling: {self.if_styling}\n+
-               if_snaphot: {self.if_snaphot}\n"""
+        return f"""ArtsymlConnector status\n+
+               if_camera_on: {self.__if_camera_on}\n+
+               if_styling: {self.__if_styling}\n+
+               if_snaphot: {self.__if_snaphot}\n"""
 
     def camera_on(self):
         self.camera = cv2.VideoCapture(0)
-        self.if_camera_on = True
+        self.__if_camera_on = True
         self.time_camera_on = time.time()
 
     def camera_off(self):
@@ -40,14 +77,23 @@ class ArtsymlConnector():
             self.camera.release()
         except:
             pass
-        self.if_camera_on = False
+        self.__if_camera_on = False
 
-    def start_style(self, i = 0):
-        self.style_image_index = i
-        self.if_styling = True
+    def start_style(self, style_name = None):
+        if style_name == None:
+            style_name = list(self.__artsyml_objs.keys())[0]
+        self.change_style_by_name(style_name)
+        self.__if_styling = True
         
     def stop_style(self):
-        self.if_styling = False
+        self.__if_styling = False
+
+    def start_cycle(self):
+        self.__if_styling = True    
+        self.__if_styling_cycle = True
+
+    def stop_cycle(self):
+        self.__if_styling_cycle = False
 
     def delete_folder_contects(self, folder = SNAPSHOT_DIR):
         print("delete_snapshot_files() called")
@@ -57,7 +103,7 @@ class ArtsymlConnector():
             os.remove(f_path)
 
     def take_snapshot(self):
-        artsyml_connector.if_snaphot = True
+        artsyml_connector.__if_snaphot = True
         original_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_ORIGINAL)
         styled_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_STYLED)
         cv2.imwrite(original_file_path, self.frame)
@@ -68,11 +114,11 @@ class ArtsymlConnector():
         self.camera_on()     
         _start_time = time.time()
         _prev_capture_time = time.time()
-        _style_number = len(self.artsyml_obj.style_images)
         _cycle_time_counter = 0
-        style_number_cycle_gen = cycle(range(_style_number))
-        print(f"gen_frame called (if_camera_on: {self.if_camera_on})")
-        while self.if_camera_on:
+        _last_style = self.__active_artsyml_obj_name
+        style_number_cycle_gen = cycle(self.__artsyml_objs)
+        print(f"gen_frame called (if_camera_on: {self.__if_camera_on})")
+        while self.__if_camera_on:
             success, self.frame = self.camera.read()
 
             # mearing the time difference
@@ -81,24 +127,28 @@ class ArtsymlConnector():
             _prev_capture_time = _capture_time    
             _cycle_time_counter += _delta_time
 
-            if self.if_styling:
+            if self.__if_styling:
                 # if the the user changes the style image, then style image of
                 # ArtsyML object should also be changed.
 
                 # Cycling the syle images
-                if self.if_styling_cycle and (self.styling_cycle_seconds <= _cycle_time_counter):
+                if self.__if_styling_cycle and (self.styling_cycle_seconds <= _cycle_time_counter):
                     print("_cycle_time_counter", _cycle_time_counter)
                     _cycle_time_counter = 0
-                    self.style_image_index = next(style_number_cycle_gen)
+                    self.change_style_by_name(next(style_number_cycle_gen))
 
-                if self.style_image_index != self.artsyml_obj.style_image_index:
-                    self.artsyml_obj.set_style_image_by_index(self.style_image_index)
+                if _last_style != self.__active_artsyml_obj_name:
+                    self.change_style_by_name(self.__active_artsyml_obj_name)
 
-                self.output_frame = self.artsyml_obj.apply_style(frame = self.frame)
+                self.output_frame = self.__active_artsyml_obj.apply_style(frame = self.frame)
+                _last_style = self.__active_artsyml_obj_name
             else:
                 self.output_frame = self.frame
-            if self.if_snaphot:
-                self.if_snaphot = False
+            
+            print(f"delta_time: {_delta_time}")
+            if self.__if_snaphot:
+                self.__if_snaphot = False
+                self.camera_off()
                 break
             ret, buffer = cv2.imencode('.jpg', self.output_frame)
             frame2 = buffer.tobytes()
@@ -106,10 +156,17 @@ class ArtsymlConnector():
             yield (b'--frame2\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame2 + b'\r\n') 
 
-
-
+"""
 artsyml_obj = ArtsyML()
 style_files_paths = AdditionalConfig.style_images
 artsyml_obj.read_style_images(style_files_paths)
 artsyml_connector = ArtsymlConnector(artsyml_obj, AdditionalConfig.styling_cycle_seconds)
+"""
 
+artsyml_connector = ArtsymlConnector()
+artsyml_connector.add_styles_from_app_config()
+
+print(artsyml_connector.style_images_abspath)
+print(artsyml_connector.if_camera_on)
+print(f"artsyml_connector.if_camera_on: {artsyml_connector.if_camera_on}")
+print(artsyml_connector.if_camera_on)

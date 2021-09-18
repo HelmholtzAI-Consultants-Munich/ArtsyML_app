@@ -1,17 +1,16 @@
 import os
-import cv2
 import time
 from flask_mail import Message
+from flask import current_app
 from .config import AdditionalConfig
 from . import mail
-from artsyml import settings
-from artsyml import ArtsyML
 
 SNAPSHOT_FILE_ORIGINAL = "original_frame.jpg"
 SNAPSHOT_FILE_STYLED = "styled_frame.jpg"
 
 
-
+def abspath_to_relpath(abspath):
+    return os.path.relpath(abspath, current_app.root_path)
 
 def mail2user(user_email):  
     print("mail2user called, email sender", AdditionalConfig.app_email)

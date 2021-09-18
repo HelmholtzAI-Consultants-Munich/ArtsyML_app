@@ -32,16 +32,16 @@
                 <div class="card-header text-center"><b>Style Gallery</b></div>
                 <div class="card-body text-center" style="padding: 0px; margin-bottom: 0px;">
                     <div class="btn-group-vertical" data-toggle="buttons" style="padding: 0px;"> 
-                        {% for path in relative_style_files_paths %}
+                        {% for name, path in style_files_paths.items() %}
                             {% if loop.index0 is divisibleby(2) %}
-                                <a id=set_style_image name="{{IMAGE_NAME_PREF}}{{loop.index0}}" class="btn btn-primary btn-square-md style_image" style="background-image: url('{{path}}');"></a>
+                                <a id=set_style_image name="{{IMAGE_NAME_PREF}}{{name}}" class="btn btn-primary btn-square-md style_image" style="background-image: url('{{path}}');"></a>
                             {% endif %}
                         {% endfor %}
                     </div> 
                     <div class="btn-group-vertical" data-toggle="buttons"> 
-                        {% for path in relative_style_files_paths %}
+                        {% for name, path in style_files_paths.items() %}
                             {% if loop.index0 is not divisibleby(2) %}
-                                <a id=set_style_image name="{{IMAGE_NAME_PREF}}{{loop.index0}}" class="btn btn-primary btn-square-md style_image" style="background-image: url('{{path}}');"></a>
+                                <a id=set_style_image name="{{IMAGE_NAME_PREF}}{{name}}" class="btn btn-primary btn-square-md style_image" style="background-image: url('{{path}}');"></a>
                             {% endif %}
                         {% endfor %}
                     </div>          
@@ -50,7 +50,7 @@
                     <a id=styling_on_off name="{{IMAGE_NAME_PREF}}{{STYLE_ONOFF}}" class="btn btn-primary func_btn_gallary">
                         <i class="fa fa-power-off" style="font-size: 3rem; padding-top: 1rem;"></i><br_icon></br_icon>Styling
                     </a>  
-                    <a id=styling_cycle_on_off name="{{IMAGE_NAME_PREF}}{{STYLE_ONOFF}}" class="btn btn-primary func_btn_gallary" style="margin-left: 0rem;">
+                    <a id=styling_cycle_on_off name="cycle_onoff" class="btn btn-primary func_btn_gallary" style="margin-left: 0rem;">
                         <i class="fa fa-repeat" style="font-size: 3rem; padding-top: 1rem;"></i><br_icon></br_icon>Cycle Styling
                     </a>   
 
