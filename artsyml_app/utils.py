@@ -13,8 +13,7 @@ def abspath_to_relpath(abspath):
     return os.path.relpath(abspath, current_app.root_path)
 
 def mail2user(user_email):  
-    print("mail2user called, email sender", AdditionalConfig.app_email)
-    print("mail2user called, email receiver", user_email)
+    print("mail2user called, email receiver:", user_email)
     subject = "ArtsyML snapshot"
     body = f"Dear ArtsyML user,\n\n"+\
            f"Thank you for using the ArtsyML application. Please find in attachment the snapshot image.\n\n"+\
@@ -28,7 +27,6 @@ def mail2user(user_email):
     print("mail2user called, created")    
     for filename in [SNAPSHOT_FILE_ORIGINAL, SNAPSHOT_FILE_STYLED]:
         file_path = os.path.join(os.path.dirname(__file__), 'static/snapshot', filename)
-        print(f"{filename}:{file_path}")
         with open(file_path,'rb') as fh:
             msg.attach(
                 filename = filename,
@@ -36,7 +34,6 @@ def mail2user(user_email):
                 content_type = "snapshot/jpg",
                 data = fh.read()
             )
-    print("mail2user called, attached")               
     mail.send(msg)
     print("mail2user called, sent")    
 

@@ -5,10 +5,14 @@ from flask import Flask
 from flask_mail import Mail
 from .config import BuiltinConfig, AdditionalConfig
 from flask_bcrypt import Bcrypt
+from ._artsyml_connector import ArtsymlConnector
 
 bcrypt = Bcrypt()
 
 mail = Mail()
+
+artsyml_connector = ArtsymlConnector()
+artsyml_connector.add_styles_from_app_config()
 
 def create_app(config_class = BuiltinConfig):
     app = Flask(__name__)

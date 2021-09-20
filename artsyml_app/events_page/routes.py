@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import render_template
-from .._artsyml_connector import artsyml_connector
+from .. import artsyml_connector
 events = Blueprint('events', __name__)
 
 @events.route("/events", methods = ['GET', 'POST'])

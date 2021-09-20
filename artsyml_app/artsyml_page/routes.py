@@ -6,7 +6,7 @@ import os
 import time
 from ..utils import mail2user, abspath_to_relpath
 from .email_form import EmailForm
-from .._artsyml_connector import artsyml_connector
+from .. import artsyml_connector
 
 artsyml = Blueprint('artsyml', __name__)
 
@@ -28,11 +28,11 @@ style_files_paths_in_app = {
 @artsyml.route("/", methods = ['GET', 'POST'])
 @artsyml.route("/artsyml", methods = ['GET', 'POST'])
 def artsyml_page():
-    print("style_files_paths_in_app")
-    print(style_files_paths_in_app)
     artsyml_connector.delete_folder_contects()
+
+    artsyml_connector.gen_frame()
     return render_template(
-        'artsyml.html', 
+        'artsyml.html',  
         title = 'ArtsyML', 
         style_files_paths = style_files_paths_in_app,
         IMAGE_NAME_PREF = IMAGE_NAME_PREF,
@@ -49,10 +49,8 @@ def style_on_off():
 
     if artsyml_connector.if_styling:
         artsyml_connector.stop_style()
-        print("artsyml_connector.if_styling -> False")
     else:
         artsyml_connector.start_style()
-        print("artsyml_connector.if_styling -> True")
     
     return render_template(
         'artsyml.html', 
@@ -82,18 +80,14 @@ def styling_cycle_on_off():
 @artsyml.route('/set_style_image/<style_image>',methods=['GET', 'POST'])
 def set_style_image(style_image = None):
     artsyml_connector.stop_cycle()
-    print("received command", style_image)
     style_image_commad = style_image.replace(IMAGE_NAME_PREF, "")
     if style_image_commad == STYLE_ONOFF:
         if artsyml_connector.if_styling:
-            print("Styling: Turn off")
             artsyml_connector.stop_style()
         else:
-            print("Styling: Turn on")
             artsyml_connector.start_style()
     else:
         artsyml_connector.start_style(style_image_commad)
-        print(f"changing styling number to {style_image_commad}")
     return render_template(
         'artsyml.html', 
         title = 'ArtsyML', 
@@ -118,7 +112,6 @@ def snapshot():
     form = EmailForm()
     artsyml_connector.camera_off()
     if form.validate_on_submit():
-        print("email:", form.email.data)
         mail2user(user_email = form.email.data)
         print("email was sent!")
         flash(f"""Dear user,\n 
@@ -126,7 +119,6 @@ def snapshot():
 
         return redirect(url_for('artsyml.email_success'))
     else:   
-        print("email error:", form.email.data)
         print(form.errors)
         return render_template(
             'artsyml_snapshot.html', 

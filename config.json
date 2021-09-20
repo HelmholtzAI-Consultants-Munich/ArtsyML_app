@@ -1,5 +1,5 @@
 {
-    "SECRET_KEY": "54fab92988f11768e749e538e6440c05",
+    "SECRET_KEY": "cc69ef477de9cc4c8ae0c898dbc24a56",
     "MAIL_USERNAME": "artsyml.helmholtzai@helmholtz-muenchen.de",
     "MAIL_PASSWORD": "",
     "SQLALCHEMY_TRACK_MODIFICATIONS": false,
@@ -9,10 +9,8 @@
         "style3": "artsyml_app/static/style_images/style3.jpg",
         "style4": "artsyml_app/static/style_images/style4.jpg"  
     },
-    "styling_cycle_seconds": 10,
-    "snapshot_dir": "artsyml_app/static/snapshot",
-    "original_frame_snapshot_filename": "artsyml_app/static/snapshot/original_frame.jpg",
-    "styled_frame_snapshot_filename": "artsyml_app/static/snapshot/styled_frame.jpg"
+    "styling_cycle_seconds": 3,
+    "snapshot_dir": "artsyml_app/static/snapshot"
 }
 
 
