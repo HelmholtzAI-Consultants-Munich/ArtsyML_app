@@ -71,6 +71,7 @@ class ArtsymlConnector():
     def camera_on(self):
         self.camera = cv2.VideoCapture(0)
         self.__if_camera_on = True
+        self.__if_snaphot = False
         self.time_camera_on = time.time()
 
     def camera_off(self):
@@ -110,7 +111,6 @@ class ArtsymlConnector():
         styled_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_STYLED)
         cv2.imwrite(original_file_path, self.frame)
         cv2.imwrite(styled_file_path, self.output_frame)
-        self.__if_snaphot = False
         self.camera_off()   
 
     def gen_frame(self):
@@ -157,13 +157,6 @@ class ArtsymlConnector():
 
             yield (b'--frame2\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame2 + b'\r\n') 
-
-"""
-artsyml_obj = ArtsyML()
-style_files_paths = AdditionalConfig.style_images
-artsyml_obj.read_style_images(style_files_paths)
-artsyml_connector = ArtsymlConnector(artsyml_obj, AdditionalConfig.styling_cycle_seconds)
-"""
 
 
 

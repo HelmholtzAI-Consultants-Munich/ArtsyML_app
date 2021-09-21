@@ -19,9 +19,4 @@ class AdditionalConfig:
     app_email = config.get('MAIL_USERNAME')
     style_images = config.get('style_images')
     styling_cycle_seconds = config.get('styling_cycle_seconds')
-    """
-    snapshot_dir = os.path.abspath
-    original_frame_snapshot_filename = config.get('original_frame_snapshot_filename')
-    styled_frame_snapshot_filename = config.get('styled_frame_snapshot_filename')
-    """
-    
+
