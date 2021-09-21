@@ -25,7 +25,7 @@ style_files_paths_in_app = {
 
 
 
-@artsyml.route("/", methods = ['GET', 'POST'])
+#@artsyml.route("/", methods = ['GET', 'POST'])
 @artsyml.route("/artsyml", methods = ['GET', 'POST'])
 def artsyml_page():
     artsyml_connector.delete_folder_contects()
