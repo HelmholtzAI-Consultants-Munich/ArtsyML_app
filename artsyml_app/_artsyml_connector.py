@@ -98,6 +98,8 @@ class ArtsymlConnector():
         self.__if_styling_cycle = False
 
     def delete_folder_contects(self, folder = SNAPSHOT_DIR):
+        if not os.path.exists(folder):
+            os.makedirs(folder)
         for f in os.listdir(folder):
             f_path = os.path.join(folder, f)
             os.remove(f_path)
