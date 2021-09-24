@@ -33,6 +33,7 @@ def agreement():
 @artsyml.route("/artsyml", methods = ['GET', 'POST'])
 def artsyml_page():
     print("ArtsyML page opened.")
+    artsyml_connector.camera_off()
     artsyml_connector.delete_folder_contects()
     return render_template(
         'artsyml.html',  
