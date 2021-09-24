@@ -22,15 +22,18 @@ style_files_paths_in_app = {
 
 
 
-
+@artsyml.route("/agreement", methods = ['GET', 'POST'])
+def agreement():
+    return render_template(
+        'agreement.html'
+    )
 
 
 #@artsyml.route("/", methods = ['GET', 'POST'])
 @artsyml.route("/artsyml", methods = ['GET', 'POST'])
 def artsyml_page():
+    print("ArtsyML page opened.")
     artsyml_connector.delete_folder_contects()
-
-    artsyml_connector.gen_frame()
     return render_template(
         'artsyml.html',  
         title = 'ArtsyML', 
@@ -48,8 +51,10 @@ def style_on_off():
     #artsyml_connector.if_styling_cycle = False
 
     if artsyml_connector.if_styling:
+        print("Styling stoped by user.")
         artsyml_connector.stop_style()
     else:
+        print("Styling started by user.")
         artsyml_connector.start_style()
     
     return render_template(
@@ -64,9 +69,11 @@ def style_on_off():
 @artsyml.route('/styling_cycle_on_off',methods=['GET', 'POST'])
 def styling_cycle_on_off():
     if artsyml_connector.if_styling_cycle:
+        print("Cycling stoped by user.")
         artsyml_connector.stop_cycle()
     else:
-         artsyml_connector.start_cycle()
+        print("Cycling started by user.")
+        artsyml_connector.start_cycle()
         
     return render_template(
         'artsyml.html', 
@@ -81,6 +88,7 @@ def styling_cycle_on_off():
 def set_style_image(style_image = None):
     artsyml_connector.stop_cycle()
     style_image_commad = style_image.replace(IMAGE_NAME_PREF, "")
+    print(f"Style '{style_image_commad}' called by user.")
     if style_image_commad == STYLE_ONOFF:
         if artsyml_connector.if_styling:
             artsyml_connector.stop_style()
@@ -108,9 +116,10 @@ def snapshot():
     except:
         print("Taking a snapshot was unsuccessful!")
         flash(f"""At the moment, taking spanshot is not possible.\n""",'error')    
+        artsyml_connector.camera_off()
+
 
     form = EmailForm()
-    artsyml_connector.camera_off()
     if form.validate_on_submit():
         mail2user(user_email = form.email.data)
         print("email was sent!")

@@ -1,0 +1,31 @@
+{% extends "artsyml_layout.html" %}
+{% block content %}
+<main role="main" class="container " style="padding-left: 0rem; padding-left: 0rem;">        
+    <div class="row justify-content-md-center">
+        <div class="col-md-8 justify-content-center" >
+            <article class="media content-section" >
+                <div class="media-body ">
+                    <div class="card" >
+                        <div class="card-body">
+                            <h4><a class="article-title" ><center></center></a></h2>
+                            <p class="article-content text-justify">ArtsyML is a deep learning tool that blends any people in the real time video stream with a biological image. Thus please notice that by redirecting to the application page a camera captures your video. No video or image of you is not saved unless by your request for taking a snapshot. In that case the actual image of you and its blended one are saved temporarily and automatically deleted after 1 minute.</p> 
+                            <p class="article-content text-justify"></p><b>If you agree with the data privacy agreement please confirm it.</b></p>
+                            <a href="{{ url_for('events.events_page') }}" class="btn btn-danger">I don't agree. Go back.</a>
+                            <a href="{{ url_for('artsyml.artsyml_page') }}" class="btn btn-primary" style="float: right;">I agree. Go to ArtsyML!</a>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-top: 1rem;">
+                        <div class="card-body">
+                            <h4><a class="article-title" ><center>Data Privacy Agreement</center></a></h2>
+                            <p class="article-content text-justify">
+                                Some text ...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}
