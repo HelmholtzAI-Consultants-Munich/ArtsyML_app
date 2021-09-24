@@ -59,6 +59,7 @@ class ArtsymlConnector():
     def change_style_by_name(self, name):
         self.__active_artsyml_obj = self.__artsyml_objs[name]
         self.__active_artsyml_obj_name = name
+        print(f"style changed to -> {name}")
 
     def __str__(self):
         return f"""ArtsymlConnector status\n+
@@ -69,6 +70,8 @@ class ArtsymlConnector():
 
 
     def camera_on(self):
+        # to make sure that we do not request to turn on a camera which already has been turned on
+        self.camera_off()
         self.camera = cv2.VideoCapture(0)
         self.__if_camera_on = True
         self.__if_snaphot = False
@@ -134,9 +137,11 @@ class ArtsymlConnector():
                 # ArtsyML object should also be changed.
 
                 # Cycling the syle images
-                if self.__if_styling_cycle and (self.styling_cycle_seconds <= _cycle_time_counter):
+                if (self.__if_styling_cycle and (self.styling_cycle_seconds <= _cycle_time_counter)) or self.__active_artsyml_obj_name == None:
                     _cycle_time_counter = 0
-                    self.change_style_by_name(next(style_number_cycle_gen))
+                    _cycle_style_name = next(style_number_cycle_gen)
+                    self.__active_artsyml_obj_name = _cycle_style_name
+
 
                 if _last_style != self.__active_artsyml_obj_name:
                     self.change_style_by_name(self.__active_artsyml_obj_name)
