@@ -4,7 +4,7 @@ from wtforms import StringField, SubmitField
 
 class EmailForm(FlaskForm):
     email = StringField(
-        'Please neter your email address here:',
+        'Please enter your email address here:',
         validators=[
             DataRequired(message="Please enter your email address."), 
             Email(),

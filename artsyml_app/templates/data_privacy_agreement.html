@@ -1,0 +1,24 @@
+{% extends "artsyml_layout.html" %}
+{% block content %}
+<main role="main" class="container " style="padding-left: 0rem; padding-left: 0rem;">        
+    <div class="row justify-content-md-center">
+        <div class="col-md-8 justify-content-center" >
+            <article class="media content-section" >
+                <div class="media-body ">
+                    <div class="card" style="margin-top: 1rem;">
+                        <div class="card-body">
+                            <h4><a class="article-title" ><center>Data Privacy Agreement</center></a></h2>
+                            <p class="article-content text-justify">
+                                Data privacy agreement text ...
+                            </p>
+                            <a href="/" class="btn btn-danger">I don't agree. Go to homepage.</a>
+                            <a href="{{ url_for('artsyml.artsyml_page') }}" class="btn btn-primary" style="float: right;">I agree. Go to ArtsyML!</a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</main>
+
+{% endblock content %}

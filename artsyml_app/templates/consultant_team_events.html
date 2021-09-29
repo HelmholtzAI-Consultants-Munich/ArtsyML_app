@@ -1,0 +1,24 @@
+{% extends "events_layout.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-1- float-right" >
+        <article class="media content-section" >
+            <div class="media-body ">
+                <h1><a class="article-title" ><center>Helmholtz AI Consultant Team</center></a></h2>   
+                <hr>             
+                <p class="article-content text-justify"> The Helmholtz AI central unit is also the local unit for Health, and includes a team of health-focused consultants. They are key actors in achieving the Helmholtz AI goal of empowering scientists to use AI in their research. For that, they advise and support research teams in using machine learning and deep learning. The consultants master a broad range of methods and tools, and offer help at all stages of the data analysis pipeline, from project conceptualisation to actual implementation. They provide reusable code and technical reports, and strive to enable their scientific collaborators to leverage the methods themselves, by proposing pair programming and code review sessions for example. They also play a key role in disseminating knowledge, by contributing open-source software to the community and proposing trainings adapted to the needs of the Health research community.</p>
+                    <center><img src="{{ url_for('static', filename='img/' + 'consultant_team.png') }}" style="width:60%;"/></center>
+            </div>
+        </article>
+    </div>
+</div>
+
+<!--
+<article class="media content-section bg-primary text-white">
+    <div class="media-body">
+        <p class="article-content text-justify"> Please take note that applications submitted shortly before or during the Christmas holidays (21 Dec. 2020 - 08 Jan. 2021) have a longer processing time and may not be approved until the end of January 2021. Please take this into account when setting the deadline in the form. We wish you a Merry Christmas and a Happy New Year! </p>
+    </div>
+</article>
+--> 
+{% endblock content %}

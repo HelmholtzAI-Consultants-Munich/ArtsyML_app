@@ -7,6 +7,12 @@
             <div style="margin-top: 0px;">
                 <img class="w-100" src="{{ url_for('artsyml.video_feed') }}"  height="500"> 
             </div>
+            <article class="media content-section" >
+                <div class="media-body ">
+                    <p class="article-content text-justify"></p><b>Please read ArtsyML <a href="data_privacy_agreement">data privacy agreement</a>.</b></p>
+                </div>
+            </article>
+            
             <!-- </article> -->
             {% with messages =get_flashed_messages(with_categories = true) %}
                 {% if messages %}
@@ -60,6 +66,12 @@
     </div>
 </main>
 <script>
+    setTimeout(function(){
+        window.location.href = "{{'/'}}";
+    }, 120000);
+</script>
+<!--
+<script>
     var time = new Date().getTime();
     $(document.body).bind("mousemove keypress", function(e) {
         time = new Date().getTime();
@@ -74,5 +86,5 @@
 
     setTimeout(refresh, 60000);
 </script>
-
+-->
 {% endblock content %}
