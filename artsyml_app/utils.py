@@ -8,7 +8,6 @@ from . import mail
 SNAPSHOT_FILE_ORIGINAL = "original_frame.jpg"
 SNAPSHOT_FILE_STYLED = "styled_frame.jpg"
 
-
 def abspath_to_relpath(abspath):
     return os.path.relpath(abspath, current_app.root_path)
 

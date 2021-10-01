@@ -2,13 +2,14 @@ import os
 from artsyml import ArtsyML
 from .config import AdditionalConfig
 import cv2
+import numpy as np
 import time
 from itertools import cycle
-
 
 SNAPSHOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static/snapshot'))
 SNAPSHOT_FILE_ORIGINAL = "original_frame.jpg"
 SNAPSHOT_FILE_STYLED = "styled_frame.jpg"
+HELMHOLTZAI_WATERMARK = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static/img/Helmholtz_AI_logo.png'))
 
 class ArtsymlConnector():
 
@@ -17,10 +18,11 @@ class ArtsymlConnector():
         self.__style_images_abspath = {}
         self.__if_camera_on = False        
         self.__if_styling = False
-        self.__if_snaphot = False
+        self.__if_snapshot = False
         self.__if_styling_cycle = False
         self.__active_artsyml_obj_name = None
         self.styling_cycle_seconds = AdditionalConfig.styling_cycle_seconds
+        self.logo = cv2.imread(HELMHOLTZAI_WATERMARK)
 
     @property
     def style_images_abspath(self):
@@ -35,8 +37,8 @@ class ArtsymlConnector():
         return self.__if_styling
 
     @property
-    def if_snaphot(self):
-        return self.__if_snaphot
+    def if_snapshot(self):
+        return self.__if_snasphot
 
     @property
     def if_styling_cycle(self):
@@ -66,7 +68,7 @@ class ArtsymlConnector():
                style_images_abspath: {self.__style_images_abspath}\n+               
                if_camera_on: {self.__if_camera_on}\n+
                if_styling: {self.__if_styling}\n+
-               if_snaphot: {self.__if_snaphot}\n"""
+               if_snaphot: {self.__if_snapshot}\n"""
 
 
     def camera_on(self):
@@ -74,7 +76,7 @@ class ArtsymlConnector():
         self.camera_off()
         self.camera = cv2.VideoCapture(0)
         self.__if_camera_on = True
-        self.__if_snaphot = False
+        self.__if_snapshot = False
         self.time_camera_on = time.time()
 
     def camera_off(self):
@@ -107,13 +109,20 @@ class ArtsymlConnector():
         for f in os.listdir(folder):
             f_path = os.path.join(folder, f)
             os.remove(f_path)
-
+    
+    def _apply_watermark(self):
+        self.watermarked_img = self.output_frame.copy()
+        where_not_zero = np.where(self.logo[:,:]!=(0,0,0))
+        self.watermarked_img[where_not_zero[0], where_not_zero[1]] = self.logo[where_not_zero[0],where_not_zero[1]]
+        
     def take_snapshot(self):
-        self.__if_snaphot = True
+        self.__if_snapshot = True
         original_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_ORIGINAL)
         styled_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_STYLED)
+
+        self._apply_watermark()
         cv2.imwrite(original_file_path, self.frame)
-        cv2.imwrite(styled_file_path, self.output_frame)
+        cv2.imwrite(styled_file_path, self.watermarked_img)
         self.camera_off()   
 
     def gen_frame(self):
@@ -152,9 +161,9 @@ class ArtsymlConnector():
                 self.output_frame = self.frame
             
             print(f"success: {success} ,delta_time: {_delta_time}")
-            if self.__if_snaphot:
-                print("self.__if_snaphot", self.__if_snaphot)
-                self.__if_snaphot = False
+            if self.__if_snapshot:
+                print("self.__if_snapshot", self.__if_snapshot)
+                self.__if_snapshot = False
                 self.camera_off()
                 break
             ret, buffer = cv2.imencode('.jpg', self.output_frame)

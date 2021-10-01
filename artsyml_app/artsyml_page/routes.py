@@ -119,13 +119,14 @@ def snapshot():
     the snapshot images are stored at SNAPSHOT_DIR. If it takes moe than 5 second 
     a message is shown that the taking snapshot was not successfull.
     """
+    
     try:
         artsyml_connector.take_snapshot()
     except:
         print("Taking a snapshot was unsuccessful!")
         flash(f"""At the moment, taking spanshot is not possible.\n""",'error')    
         artsyml_connector.camera_off()
-
+    
 
     form = EmailForm()
     if form.validate_on_submit():
