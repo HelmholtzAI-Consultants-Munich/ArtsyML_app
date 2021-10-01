@@ -29,6 +29,13 @@ def agreement():
     )
 
 
+@artsyml.route("/data_privacy_agreement", methods = ['GET', 'POST'])
+def data_privacy_statement():
+    return render_template(
+        'data_privacy_agreement.html'
+    )
+
+
 #@artsyml.route("/", methods = ['GET', 'POST'])
 @artsyml.route("/artsyml", methods = ['GET', 'POST'])
 def artsyml_page():
