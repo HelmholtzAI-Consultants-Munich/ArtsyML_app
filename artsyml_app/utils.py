@@ -15,7 +15,8 @@ def mail2user(user_email):
     print("mail2user called, email receiver:", user_email)
     subject = "ArtsyML snapshot"
     body = f"Dear ArtsyML user,\n\n"+\
-           f"Thank you for using the ArtsyML application. Please find in attachment the snapshot image.\n\n"+\
+           f"Thank you for using the ArtsyML application. Please find the snapshot image attached.\n"+\
+           f"Feel free to use the pictures for your own purposes, but please note that the rendered version may only be used without modifications on a non-commercial basis\n\n"+\
            f"Best regards,\n"+\
            f"Helmholtz AI,\n"
 
