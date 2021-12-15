@@ -6,6 +6,8 @@ from flask_mail import Mail
 from .config import BuiltinConfig, AdditionalConfig
 from flask_bcrypt import Bcrypt
 from ._artsyml_connector import ArtsymlConnector
+# added C-hack
+#from artsyml import ArtsyML
 
 bcrypt = Bcrypt()
 

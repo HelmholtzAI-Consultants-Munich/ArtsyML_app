@@ -1,6 +1,6 @@
 {
     "SECRET_KEY": "cc69ef477de9cc4c8ae0c898dbc24a56",
-    "MAIL_USERNAME": "artsyml.helmholtzai@helmholtz-muenchen.de",
+    "MAIL_USERNAME": "",
     "MAIL_PASSWORD": "",
     "SQLALCHEMY_TRACK_MODIFICATIONS": false,
     "style_images": {

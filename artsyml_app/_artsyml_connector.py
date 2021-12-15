@@ -13,7 +13,7 @@ HELMHOLTZAI_WATERMARK = os.path.abspath(os.path.join(os.path.dirname(__file__), 
 
 class ArtsymlConnector():
 
-    def __init__(self):
+    def __init__(self): #, artsyml): #C.B. hack added artsyml
         self.__artsyml_objs = {}
         self.__style_images_abspath = {}
         self.__if_camera_on = False        
@@ -23,6 +23,9 @@ class ArtsymlConnector():
         self.__active_artsyml_obj_name = None
         self.styling_cycle_seconds = AdditionalConfig.styling_cycle_seconds
         self.logo = cv2.imread(HELMHOLTZAI_WATERMARK)
+        #C.B. hack added artsyml
+        #self.artsyml = arsyml
+        #self.__artsyml_objs[name] = ArtsyML(image_file)
 
     @property
     def style_images_abspath(self):
@@ -74,7 +77,7 @@ class ArtsymlConnector():
     def camera_on(self):
         # to make sure that we do not request to turn on a camera which already has been turned on
         self.camera_off()
-        self.camera = cv2.VideoCapture(0)
+        self.camera = cv2.VideoCapture(4) #0) #-1)
         self.__if_camera_on = True
         self.__if_snapshot = False
         self.time_camera_on = time.time()
@@ -112,14 +115,15 @@ class ArtsymlConnector():
     
     def _apply_watermark(self):
         self.watermarked_img = self.output_frame.copy()
+        self.logo = cv2.resize(self.logo, (self.watermarked_img.shape[1], self.watermarked_img.shape[0]))
         where_not_zero = np.where(self.logo[:,:]!=(0,0,0))
         self.watermarked_img[where_not_zero[0], where_not_zero[1]] = self.logo[where_not_zero[0],where_not_zero[1]]
+
         
     def take_snapshot(self):
         self.__if_snapshot = True
         original_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_ORIGINAL)
         styled_file_path = os.path.join(SNAPSHOT_DIR, SNAPSHOT_FILE_STYLED)
-
         self._apply_watermark()
         cv2.imwrite(original_file_path, self.frame)
         cv2.imwrite(styled_file_path, self.watermarked_img)
@@ -160,13 +164,15 @@ class ArtsymlConnector():
             else:
                 self.output_frame = self.frame
             
-            print(f"success: {success} ,delta_time: {_delta_time}")
+            #print(f"success: {success} ,delta_time: {_delta_time}")
+            self.output_frame = cv2.flip(self.output_frame, 1)
             if self.__if_snapshot:
                 print("self.__if_snapshot", self.__if_snapshot)
                 self.__if_snapshot = False
                 self.camera_off()
                 break
             ret, buffer = cv2.imencode('.jpg', self.output_frame)
+
             frame2 = buffer.tobytes()
 
             yield (b'--frame2\r\n'
