@@ -24,8 +24,9 @@ Third, installing the `tf-packaging` branch of ArtsyML package:
 ```console
 (.venv_artsyml_app) $ cd PATH/TO/ARTSYML/DIRECTORY
 (.venv_artsyml_app) $ git checkout remotes/origin/tf-packaging
-(.venv_artsyml_app) $ pip3 install -e .
+(.venv_artsyml_app) $ bash install_{cpu | gpu}.sh
 ```
+For more information on the installation of ArtsyML see the README [here](https://github.com/HelmholtzAI-Consultants-Munich/ArtsyML)
 
 ## How to run?
 
